@@ -21,6 +21,9 @@ public class NewsService  {
     @Autowired
     private SessionFactory sessionFactory;
 
+    public News findById(Long id){
+        return (News)sessionFactory.getCurrentSession().createQuery("from News where id =" + id).uniqueResult();
+    }
 
     public void add(News news){
         Session session = sessionFactory.getCurrentSession();
@@ -30,7 +33,16 @@ public class NewsService  {
         session.save(news);
     }
 
-    public void delete(Integer id){
+    public void edit(News news){
+
+        News oldNews = findById(news.getid());
+
+        oldNews.setTitle(news.getTitle());
+        oldNews.setContent(news.getContent());
+        oldNews.setCategories(news.getCategories());
+    }
+
+    public void delete(Long id){
         Session session = sessionFactory.getCurrentSession();
 
         News news = (News)session.get(News.class, id);

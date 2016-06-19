@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
-@SessionAttributes("categories")
 public class NewsController {
 
     public NewsController(){}
@@ -29,10 +28,11 @@ public class NewsController {
     private CategoryService categoryService;
 
 
-    @RequestMapping("/news")
-    public ModelAndView getNews(Model model){
 
-            List<News> news = newsService.getAll();
+    @RequestMapping(value={"/", "news"})
+    public ModelAndView getNews(@RequestParam(value = "q", required = false) String q, Model model){
+
+        List<News> news = newsService.getAll();
 
         model.addAttribute("news", news);
         return new ModelAndView("list");
@@ -61,13 +61,42 @@ public class NewsController {
         return "redirect:/news";
     }
 
+    @RequestMapping(value = "/news/edit", method = RequestMethod.GET)
+    public String edit(@RequestParam(value = "id") Long id, Model model)
+    {
+        List<Category> categories = categoryService.getAll();
+
+        model.addAttribute("newsAttribute", newsService.findById(id));
+        model.addAttribute("categories", categories);
+
+        return "editpage";
+    }
+
+
+    @RequestMapping(value = "/news/edit", method = RequestMethod.POST)
+    public String edit(@ModelAttribute(value = "newsAttribute") News news,
+                       @RequestParam(value = "id") Long id,
+                       @RequestParam(value  = "tags") List<Long> tags){
+
+
+        List<Category> existingCategories = categoryService.findByIds(tags);
+
+        news.setCategories(existingCategories);
+        news.setId(id);
+
+        newsService.edit(news);
+
+        return "redirect:/news";
+
+    }
+
     @RequestMapping(value = "/news/delete", method = RequestMethod.GET)
-    public ModelAndView delete(@RequestParam(value = "id") Integer id, Model model){
+    public String delete(@RequestParam(value = "id") Long id, Model model){
         newsService.delete(id);
 
         model.addAttribute("id", id);
 
-        return new ModelAndView("deletedpage");
+        return "redirect:/news";
     }
 
     @ModelAttribute("categories")

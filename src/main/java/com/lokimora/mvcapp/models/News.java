@@ -26,7 +26,7 @@ public class News implements Serializable{
 
     private Date date;
 
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Category.class, cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Category.class)
     @JoinTable(name = "news_categories", schema = "public",
             joinColumns = @JoinColumn(name = "news_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))

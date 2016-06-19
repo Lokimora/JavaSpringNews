@@ -20,7 +20,7 @@ public class Category implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -55,6 +55,30 @@ public class Category implements Serializable{
         return id + name;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj){
+            return true;
+        }
+        if(obj == null){
+            return false;
+        }
+        if(!(obj instanceof Category)){
+            return false;
+        }
+
+        Category another = (Category) obj;
+
+        if(id == null){
+            if(another.id != null){
+                return false;
+            }
+
+        }else if(!id.equals(another.id)){
+            return false;
+        }
+        return true;
+    }
 
 
 }

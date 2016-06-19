@@ -24,6 +24,22 @@ public class CategoryService {
         return sessionFactory.getCurrentSession().createQuery("from Category").list();
     }
 
+    public void add(String name){
+
+        Session session = sessionFactory.getCurrentSession();
+
+        Query query = session.createQuery("from Category WHERE name =\'" + name + "\'");
+
+        Category existCategory = (Category)query.uniqueResult();
+
+        if(existCategory == null){
+            Category category = new Category();
+            category.setName(name);
+            session.save(category);
+        }
+
+    }
+
     public Category findById(Integer id){
         return (Category)sessionFactory.getCurrentSession().createQuery("from Category where id = " + id).uniqueResult();
     }

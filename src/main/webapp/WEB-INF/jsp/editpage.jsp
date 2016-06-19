@@ -24,22 +24,25 @@
         </div>
         <ul class="nav navbar-nav">
             <li><a href="${newsUrl}">Home</a></li>
-            <li class="active"><a href="">Создать новость</a></li>
+            <li><a href="${createUrl}">Создать новость</a></li>
             <li><a href="${categoryUrl}">Создать категорию</a></li>
         </ul>
     </div>
 </nav>
 
 <div class="container">
-<h1> Создать новость</h1>
-<c:url var="saveUrl" value="/news/add"/>
+    <h1> Редактировкать новость</h1>
+    <c:url var="saveUrl" value="/news/edit"/>
     <form:form modelAttribute="newsAttribute" id="news-form" method="POST" action="${saveUrl}" >
+
+
+        <form:hidden path="id"/>
 
         <div class="row">
             <div class="form-group col-md-12">
                 <label class="col-md-3 control-label" for="title">Заголовок</label>
                 <div class="col-md7">
-                    <input type="text" id="title" name="title" class="form-control input-sm" required>
+                    <form:input required="required" path="title" class="form-control input-sm" ></form:input>
                 </div>
             </div>
         </div>
@@ -48,7 +51,7 @@
             <div class="form-group col-md-12">
                 <label class="col-md-3 control-label" for="content">Контент</label>
                 <div class="col-md7">
-                    <textarea id="content" name="content" class="form-control input-sm" required></textarea>
+                    <form:textarea rows="10" required="required" path="content" class="form-control input-sm"></form:textarea>
                 </div>
             </div>
         </div>
@@ -57,13 +60,22 @@
         <c:choose>
             <c:when test="${categories != null && categories.size() > 0}">
                 <select multiple name="tags" size="10" required>
+
                     <c:forEach items="${categories}" var="tag">
-                        <option value="${tag.id}">${tag.name}</option>
+                     <c:choose>
+                        <c:when test="${newsAttribute.categories != null && newsAttribute.categories.contains(tag)}">
+                            <option selected value="${tag.id}">${tag.name}</option>
+                        </c:when>
+                        <c:otherwise>
+                            <option value="${tag.id}">${tag.name}</option>
+                        </c:otherwise>
+                     </c:choose>
                     </c:forEach>
+
                 </select>
             </c:when>
             <c:otherwise>
-                <p>Тегов нету. <a href="${categoryUrl}"> Создайте теги</a></p>
+                <p>Тегов нету. Создайте теги</p>
             </c:otherwise>
         </c:choose>
 
@@ -75,28 +87,28 @@
         <br />
         <br />
 
-        <input type="submit" value="Добавить новость" class="btn btn-success">
+        <input type="submit" value="Редактировать" class="btn btn-warning">
 
     </form:form>
 </div>
-    <script>
-        function call(){
-            var serNews = $("#news-form").serialize();
+<script>
+    function call(){
+        var serNews = $("#news-form").serialize();
 
-            $.ajax({
-                type: "POST",
-                url: "${saveUrl}",
-                data: serNews,
-                success: function(data){
-                    alert("SUCCESS");
-                },
+        $.ajax({
+            type: "POST",
+            url: "${saveUrl}",
+            data: serNews,
+            success: function(data){
+                alert("SUCCESS");
+            },
 
-                error:  function(xhr, str){
-                    alert('Возникла ошибка: ' + xhr.responseCode);
-                }
-            })
-        }
-    </script>
+            error:  function(xhr, str){
+                alert('Возникла ошибка: ' + xhr.responseCode);
+            }
+        })
+    }
+</script>
 
 
 </body>
