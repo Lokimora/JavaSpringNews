@@ -17,16 +17,29 @@
 <c:url var="categoryUrl" value="/category/add"/>
 
 
-<nav class="navbar navbar-default">
+
+<nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
             <span class="navbar-brand">Новости</span>
         </div>
         <ul class="nav navbar-nav">
             <li><a href="${newsUrl}">Home</a></li>
-            <li class="active"><a href="">Создать новость</a></li>
+            <li  class="active"><a href="${createUrl}">Создать новость</a></li>
             <li><a href="${categoryUrl}">Создать категорию</a></li>
         </ul>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="col-sm-3 col-md-3 pull-right">
+                <form:form action="${searchUrl}" class="input-group" role="search" method="GET">
+                    <div class="input-group">
+                        <input pattern=".{3,}" required title="Минимум 3 символа" type="text" class="form-control" placeholder="Search" name="q" id="q" >
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form:form>
+            </div>
+        </div>
     </div>
 </nav>
 

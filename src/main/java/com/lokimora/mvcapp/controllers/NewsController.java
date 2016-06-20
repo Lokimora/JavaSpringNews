@@ -32,7 +32,16 @@ public class NewsController {
     @RequestMapping(value={"/", "news"})
     public ModelAndView getNews(@RequestParam(value = "q", required = false) String q, Model model){
 
-        List<News> news = newsService.getAll();
+        List<News> news = newsService.getAll(q);
+
+        model.addAttribute("news", news);
+        return new ModelAndView("list");
+    }
+
+    @RequestMapping(value = "/findByCategory")
+    public ModelAndView getByCategory(@RequestParam(value = "id") Long id, Model model){
+
+        List<News> news =  newsService.getByCategory(id);
 
         model.addAttribute("news", news);
         return new ModelAndView("list");
@@ -99,9 +108,6 @@ public class NewsController {
         return "redirect:/news";
     }
 
-    @ModelAttribute("categories")
-    public List<Category> initializeCategories(){
-        return categoryService.getAll();
-    }
+
 
 }
